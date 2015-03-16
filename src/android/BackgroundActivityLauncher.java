@@ -85,7 +85,11 @@ public class BackgroundActivityLauncher
     }
 
     public static boolean didStartFromBackgroundEvent(Intent intent) {
-        return intent.getBooleanExtra(EXTRA_STARTED_FOR_EVENT, false);
+        // If launchBackground() was used to explicitly start the app, the extra will be found.
+        // However, it is also possible to be started from a background event implicitly,
+        // e.g. via GCM messages
+        return intent.getBooleanExtra(EXTRA_STARTED_FOR_EVENT, false) ||
+                Intent.FLAG_FROM_BACKGROUND == (intent.getFlags() & Intent.FLAG_FROM_BACKGROUND);
     }
 
     public static void setupStartFromBackgroundEvent(Intent intent, ComponentName component) {

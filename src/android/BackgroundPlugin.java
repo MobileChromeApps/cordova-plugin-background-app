@@ -11,6 +11,8 @@ import org.apache.cordova.PluginResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -20,6 +22,8 @@ public class BackgroundPlugin extends CordovaPlugin {
     private static final String LOG_TAG = "BackgroundPlugin";
     private static final String ACTION_SWITCH_TO_FOREGROUND = "switchforeground";
 
+    private static boolean startedFromBackground;
+    private static boolean runningInBackground;
     private static BackgroundPlugin pluginInstance;
 
     private CallbackContext messageChannel;
@@ -34,7 +38,31 @@ public class BackgroundPlugin extends CordovaPlugin {
 
     @Override
     public void pluginInitialize() {
+        // Keep track if started from a background event
+        if (pluginInstance == null) {
+            if (BackgroundActivityLauncher.didStartFromBackgroundEvent(cordova.getActivity().getIntent())) {
+                startedFromBackground = true;
+                runningInBackground = true;
+            }
+        }
         pluginInstance = this;
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        // Check if switching from running in background to foreground
+        if (runningInBackground) {
+            runningInBackground = BackgroundActivityLauncher.didStartFromBackgroundEvent(intent);
+        }
+        switchToForegroundIfNeeded();
+    }
+
+    @Override
+    public void onResume(boolean multitasking) {
+        // By definition, onResume fires when the activity is being shown to user, so cannot be
+        // running in the background
+        runningInBackground = false;
+        switchToForegroundIfNeeded();
     }
 
     @Override
@@ -77,6 +105,18 @@ public class BackgroundPlugin extends CordovaPlugin {
         //  - To avoid extra boilerplate in any plugin using the event handler, will cleanup all
         //    the message channels for plugins here
         BackgroundEventHandler.releaseMessageChannels();
+    }
+
+    private void switchToForegroundIfNeeded() {
+        if (startedFromBackground && !runningInBackground) {
+            // Switch to foreground
+            Log.d(LOG_TAG, "Switch to running in foreground, based on new intent/onResume");
+            handleSwitchToForeground();
+
+            // Consider the app to have been started in the foreground now.  This prevents
+            // subsequent checks to switch to foreground.
+            startedFromBackground = false;
+        }
     }
 
 }
