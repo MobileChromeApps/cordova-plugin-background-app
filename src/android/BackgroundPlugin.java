@@ -28,12 +28,14 @@ public class BackgroundPlugin extends CordovaPlugin {
 
     private CallbackContext messageChannel;
 
-    public static void handleSwitchToForeground() {
-        if (pluginInstance != null && pluginInstance.messageChannel != null) {
-            pluginInstance.sendEventMessage(ACTION_SWITCH_TO_FOREGROUND);
-        } else {
+    public static boolean handleSwitchToForeground() {
+        if (pluginInstance == null || pluginInstance.messageChannel == null) {
             Log.w(LOG_TAG, "Unable to switch to foreground without existing plugin and message channel");
+            return false;
         }
+
+        pluginInstance.sendEventMessage(ACTION_SWITCH_TO_FOREGROUND);
+        return true;
     }
 
     @Override
@@ -111,11 +113,13 @@ public class BackgroundPlugin extends CordovaPlugin {
         if (startedFromBackground && !runningInBackground) {
             // Switch to foreground
             Log.d(LOG_TAG, "Switch to running in foreground, based on new intent/onResume");
-            handleSwitchToForeground();
-
-            // Consider the app to have been started in the foreground now.  This prevents
-            // subsequent checks to switch to foreground.
-            startedFromBackground = false;
+            if (handleSwitchToForeground()) {
+                // Consider the app to have been started in the foreground now.  This prevents
+                // subsequent checks to switch to foreground.
+                //  - If the switch fails, won't reach here, so subsequent calls will attempt
+                //    again
+                startedFromBackground = false;
+            }
         }
     }
 
