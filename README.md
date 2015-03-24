@@ -16,3 +16,5 @@ and `org.chromium.alarms` for examples.
 
 # Release Notes
 
+1.0.0
+* Initial release
