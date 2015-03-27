@@ -1,0 +1,48 @@
+// Copyright (c) 2015 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+def extractMainActivityName(data) {
+    def matcher = data =~ /(?s)\bpackage="(.*?)"/
+    matcher.find()
+    def packageId = matcher.group(1)
+    matcher = data =~ /(?s)<activity.*?android:name="(.*?)"/
+    matcher.find()
+    while (matcher.group(1).startsWith("org.chromium.Back")) {
+        matcher.find()
+    }
+    def activityName = matcher.group(1)
+    if (activityName ==~ /..*\./) {
+        return activityName
+    } else if (activityName.startsWith(".")) {
+        activityName = activityName.substring(1)
+    }
+    return "${packageId}.${activityName}"
+}
+
+def filterOutMainActivityIntentFilter(data) {
+    def matcher = data =~ /(?s)<activity.*?<\/activity>/
+    matcher.find()
+    while (matcher.group(0).contains("org.chromium.Back")) {
+        matcher.find()
+    }
+
+    def before = data.substring(0, matcher.start());
+    def after = data.substring(matcher.end());
+    matcher = matcher.group(0) =~ /(?s)<intent-filter.*?<\/intent-filter>\s*/
+    return before + matcher.replaceFirst("") + after;
+}
+
+def srcManifestFile = file(project(":").android.sourceSets.main.manifest.srcFile)
+def data = srcManifestFile.getText()
+
+def mainActivityName = extractMainActivityName(data)
+// Couldn't figure out how remove the intent-filter via manifest merging :(
+def stripIntentFilters = filterOutMainActivityIntentFilter(data)
+if (stripIntentFilters != data) {
+    println("Background-App: Removing <intent-filter> from AndroidManifest.xml")
+    srcManifestFile.write(stripIntentFilters)
+}
+
+// Used by AndroidManifest.xml within library
+android.defaultConfig.manifestPlaceholders = [ mainActivityName: mainActivityName ]

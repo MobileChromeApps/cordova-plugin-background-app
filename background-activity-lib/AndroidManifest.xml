@@ -1,0 +1,19 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.chromium.backgroundapp"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-sdk android:minSdkVersion="14" />
+    <application>
+        <activity
+            android:name="${mainActivityName}"
+            android:exported="true"
+            android:allowTaskReparenting="true">
+            <!--
+                 exported=true needed only when using ApplicationContext to launch activity.
+                 ApplicationContext only needed on older Androids, where exported=true is
+                 not required, so there may be a way to not need to export based on sdk
+                 -->
+        </activity>
+    </application>
+</manifest>
+

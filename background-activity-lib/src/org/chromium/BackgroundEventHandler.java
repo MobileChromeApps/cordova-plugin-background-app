@@ -11,7 +11,6 @@ import org.apache.cordova.PluginResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -44,29 +43,21 @@ public class BackgroundEventHandler<TPlugin extends CordovaPlugin> {
         }
 
         if (pluginInstance != null && messageChannel != null) {
-            Log.d(LOG_TAG, "Firing event to already running web view");
+            Log.d(LOG_TAG, "Firing notification to already running web view");
             sendEventMessage(event);
         } else {
             pendingEvents.add(event);
             if (pluginInstance == null) {
-                Log.d(LOG_TAG, "Launch app in background to handle event");
-                BackgroundActivityLauncher.launchBackground(context, intent);
+                BackgroundActivity.launchBackground(context);
             }
         }
     }
 
     public void makeBackgroundEventIntent(Intent intent) {
-        BackgroundActivityLauncher.setupStartFromBackgroundEvent(intent, pluginInstance.cordova.getActivity().getIntent().getComponent());
     }
 
+
     public void pluginInitialize(TPlugin instance) {
-        // If started from a background event, hide the activity
-        if (pluginInstance == null) {
-            Activity activity = instance.cordova.getActivity();
-            if (BackgroundActivityLauncher.didStartFromBackgroundEvent(activity.getIntent())) {
-                activity.moveTaskToBack(true);
-            }
-        }
         pluginInstance = instance;
     }
 
