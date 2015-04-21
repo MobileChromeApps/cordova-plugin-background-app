@@ -90,6 +90,10 @@ public class BackgroundPlugin extends CordovaPlugin {
     }
 
     private void sendEventMessage(String action, Object value) {
+        if (messageChannel == null) {
+            Log.w(LOG_TAG, "Message being dropped since channel not yet established: " + action);
+            return;
+        }
         JSONObject obj = new JSONObject();
         try {
             obj.put("type", action);
