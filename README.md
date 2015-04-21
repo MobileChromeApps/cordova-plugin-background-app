@@ -7,7 +7,9 @@ service, but does so without the use of an actual service.
 
 ## Status
 
-Currently works on Android only.
+Currently works on iOS and Android.
+
+iOS values for resumeType limited to: `''`, `'launch'`, `'normal'`, `'normal-launch'`
 
 ## Usage
 
@@ -45,6 +47,8 @@ The normal way to use this plugin:
 ### `cordova.backgroundapp.show()`
 
 Brings the app to the foreground. E.g. Call this in response to a user clicking on a notification.
+
+This symbol will be null on iOS, since iOS has not yet implemented this functionality.
 
 ## Implementation Details
 

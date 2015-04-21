@@ -3,14 +3,15 @@
 // found in the LICENSE file.
 
 var exec = require('cordova/exec');
+var cordova = require('cordova');
 var channel = require('cordova/channel');
 
 // Refer to README for possible values.
 exports.resumeType = '';
 
-exports.show = function() {
-  exec(null, null, 'BackgroundPlugin', 'show', []);
-};
+exports.show = cordova.platformId == 'android' ? function() {
+    exec(null, null, 'BackgroundPlugin', 'show', []);
+} : null;
 
 channel.createSticky('onBackgroundAppReady');
 channel.waitForInitialization('onBackgroundAppReady');
