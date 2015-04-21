@@ -21,10 +21,10 @@ After the `deviceready` event, this will either be:
 * `'launch'` - When started normally.
 
 After a `resume` event, this will be one of:
-* `'normal'` - App *was not* running as a service and has been brought to foreground by an external intent (launcher / task switcher)
-* `'normal-launch'` - App *was* running as a service and has been brought to foreground by an external intent (launcher / task switcher)
-* `'programmatic'` - App *was not* running as a service and has been brought to foreground by a call to `BackgroundActivity.launchForeground()`
-* `'programmatic-launch'` - App *was* running as a service and has been brought to foreground by a call to `BackgroundActivity.launchForeground()`
+* `'normal'` - Triggered by an external intent (launcher / task switcher). App was running normally, but had been backgrounded.
+* `'normal-launch'` - Triggered by an external intent (launcher / task switcher). App was running as a service.
+* `'programmatic'` - Triggered by a call to `BackgroundActivity.launchForeground()`. App was running normally, but had been backgrounded.
+* `'programmatic-launch'` - Triggered by a call to `BackgroundActivity. App was running as a service.
 
 The normal way to use this plugin:
 
