@@ -13,8 +13,8 @@
 
   <name>Background App</name>
   <keywords>chrome,background</keywords>
-  <repo>https://github.com/MobileChromeApps/mobile-chrome-apps.git</repo>
-  <issue>https://github.com/MobileChromeApps/mobile-chrome-apps/issues</issue>
+  <repo>https://github.com/MobileChromeApps/cordova-plugin-background-app.git</repo>
+  <issue>https://github.com/MobileChromeApps/cordova-plugin-background-app/issues</issue>
 
   <js-module src="backgroundapp.js" name="backgroundapp">
       <clobbers target="cordova.backgroundapp" />
