@@ -20,20 +20,22 @@ public class BackgroundPlugin extends CordovaPlugin {
     // This reference lets us know whether or not the app is currently running.
     static BackgroundPlugin pluginInstance;
     private CallbackContext messageChannel;
+    private boolean isMainInstance;
 
     @Override
     public void pluginInitialize() {
-        if (pluginInstance != null) {
-            // Possible that we could learn to support it by having a map of pluginInstance->MainActivity.class
-            throw new IllegalStateException("org.chromium.backgroundapp does not support multiple CordovaActivity instances");
+        isMainInstance = pluginInstance == null;
+        if (isMainInstance) {
+            pluginInstance = this;
         }
-        pluginInstance = this;
     }
 
     @Override
     public void onReset() {
         messageChannel = null;
-        releasePluginMessageChannels();
+        if (isMainInstance) {
+            releasePluginMessageChannels();
+        }
     }
 
     @Override
@@ -41,34 +43,39 @@ public class BackgroundPlugin extends CordovaPlugin {
         // This isn't called when starting in background. Only when either:
         // 1. Switching from background->foreground
         // 2. Starting in foreground for the first time
-        if (BackgroundActivity.topInstance != null) {
+        if (isMainInstance && BackgroundActivity.topInstance != null) {
             final BackgroundActivity topInstance = BackgroundActivity.topInstance;
             BackgroundActivity.topInstance = null;
             // Kill off the BackgroundActivity task stack. Leaving it around causes the next call
             // to BackgroundActivity.launchBackground() to have MainActivity in the wrong task stack.
-            cordova.getThreadPool().execute(new Runnable() {
+            webView.getView().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                cordova.getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
                     Log.i(LOG_TAG, "Finishing background activity now that foreground is alive");
                     topInstance.finish();
-                    }
-                });
+                }
+            }, 50);
+        }
+        String switchType = BackgroundActivity.prevLaunchWasProgrammatic ? "programmatic" : "normal";
+        sendEventMessage("foreground", switchType);
+
+        if (isMainInstance) {
+            webView.getView().post(new Runnable() {
+                @Override
+                public void run() {
+                    BackgroundActivity.prevLaunchWasProgrammatic = false;
                 }
             });
         }
-        String switchType = BackgroundActivity.prevLaunchWasProgrammatic ? "programmatic" : "normal";
-        BackgroundActivity.prevLaunchWasProgrammatic = false;
-        sendEventMessage("foreground", switchType);
     }
 
     @Override
     public void onDestroy() {
         messageChannel = null;
-        pluginInstance = null;
-        releasePluginMessageChannels();
+        if (isMainInstance) {
+            pluginInstance = null;
+            releasePluginMessageChannels();
+        }
     }
 
     @Override
