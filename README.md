@@ -72,3 +72,10 @@ rather than a Service is more viable.
 
 # Release Notes
 
+## 2.0.0 (April 29, 2015)
+* Introduced `cordova.backgroundapp.resumeType` and `cordova.backgroundapp.show()`
+* Rewrote Android implementation to not require translucent theme
+* Minimal iOS support added (basic `resumeType` values only)
+
+# 1.0.0 (March 2015)
+* Initial release

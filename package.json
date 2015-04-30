@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-background-app",
-  "version": "2.0.0-dev",
+  "version": "2.0.0",
   "description": "The purpose of this plugin is to enable notifications, alarms, etc to re-start your app and fire callbacks without the app causing any visual cues to the user. In essense, it allows starting an app as an Android service, but does so without the use of an actual service.",
   "cordova": {
     "id": "cordova-plugin-background-app",
