@@ -6,7 +6,7 @@
 -->
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
     id="cordova-plugin-background-app"
-    version="2.0.0">
+    version="2.0.1-dev">
   <engines>
     <engine name="cordova-android" version=">=4" />
   </engines>
