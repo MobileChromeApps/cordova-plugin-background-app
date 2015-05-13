@@ -7,14 +7,18 @@ service, but does so without the use of an actual service.
 
 ## Status
 
-Currently works on iOS and Android.
+Works on iOS and Android.
 
 iOS values for resumeType limited to: `''`, `'launch'`, `'normal'`, `'normal-launch'`
 
 ## Usage
 
-See `org.chromium.notifications` and `org.chromium.alarms` for examples of
-how to use the java API of the plugin.
+To see it in action, try the [example app](https://github.com/MobileChromeApps/cordova-plugin-background-app/tree/master/example-app).
+
+For how to create your own plugin that uses it, look at
+[cordova-plugin-chrome-apps-notifications](https://github.com/MobileChromeApps/cordova-plugin-chrome-apps-notifications)
+or
+[cordova-plugin-chrome-apps-alarms](https://github.com/MobileChromeApps/cordova-plugin-chrome-apps-alarms)
 
 ### `cordova.backgroundapp.resumeType` (string)
 
