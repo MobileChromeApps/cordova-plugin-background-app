@@ -72,6 +72,10 @@ rather than a Service is more viable.
 
 # Release Notes
 
+## 2.0.1 (May 13, 2015)
+* Fix `cordova.backgroundapp.resumeType` being `'launch'` when running in background on Android
+* Added sample app to git repo
+
 ## 2.0.0 (April 29, 2015)
 * Introduced `cordova.backgroundapp.resumeType` and `cordova.backgroundapp.show()`
 * Rewrote Android implementation to not require translucent theme
