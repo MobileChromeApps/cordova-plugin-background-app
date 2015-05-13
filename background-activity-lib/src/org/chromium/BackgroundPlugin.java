@@ -21,6 +21,7 @@ public class BackgroundPlugin extends CordovaPlugin {
     static BackgroundPlugin pluginInstance;
     private CallbackContext messageChannel;
     private boolean isMainInstance;
+    private boolean resumeEventSeen;
 
     @Override
     public void pluginInitialize() {
@@ -40,9 +41,12 @@ public class BackgroundPlugin extends CordovaPlugin {
 
     @Override
     public void onResume(boolean multitasking) {
-        // This isn't called when starting in background. Only when either:
-        // 1. Switching from background->foreground
-        // 2. Starting in foreground for the first time
+        // Ignore the resume on start-up, but assume messageChannel means there was no onResume on start-up.
+        // Cordova has flip-flopped on whether to send this event on start-up :S.
+        if (!resumeEventSeen && messageChannel == null) {
+            resumeEventSeen = true;
+            return;
+        }
         if (isMainInstance && BackgroundActivity.topInstance != null) {
             final BackgroundActivity topInstance = BackgroundActivity.topInstance;
             BackgroundActivity.topInstance = null;
