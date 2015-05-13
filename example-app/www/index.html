@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <title>BackgroundApp Example</title>
+        <script src="cordova.js"></script>
+        <script src="helpers.js"></script>
+    </head>
+    <body style="background: black; color: #ccc; margin: 40px 20px; display:none">
+      <script>
+        log('App started: ' + new Date());
+
+        document.addEventListener('deviceready', function() {
+          log('deviceready. resumeType=' + cordova.backgroundapp.resumeType);
+          initCallbacks();
+          // Don't bother drawing UI when running in the background.
+          if (cordova.backgroundapp.resumeType == 'launch') {
+            renderUi('initial launch');
+          } else { // resumeType == ''
+            log('Running in the background!');
+          }
+        });
+        document.addEventListener('resume', function() {
+          log('resume event. resumeType=' + cordova.backgroundapp.resumeType);
+          if (cordova.backgroundapp.resumeType == 'normal-launch') {
+            renderUi('user launch when backgrounded');
+          }
+        });
+      </script>
+      Things to try:
+      <ul>
+        <li>Create a notification, swipe the app away, click notification.
+        <li>Dismiss the notification (starts the app in background), launch the app
+        <li>Set an alarm, swipe the app away, click the notification
+      </ul>
+      <button onclick="createNotification('created from button')">Show test notification</button>
+      <br>
+      <br>
+      <button onclick="createAlarm(5)">Show notification after 5 seconds</button>
+      <div>Logs:</div>
+      <div style="white-space:pre; font-size:9pt; background: #333;" id="logs"></div>
+    </body>
+</html>

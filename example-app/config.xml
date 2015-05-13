@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.backgroundapp.example"
+  version="0.0.1"
+  xmlns="http://www.w3.org/ns/widgets"
+  xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>BackgroundApp Example</name>
+    <plugin name="cordova-plugin-background-app" spec="^2.0.0" />
+    <plugin name="cordova-plugin-chrome-apps-alarms" spec="^1.3.3" />
+    <plugin name="cordova-plugin-chrome-apps-notifications" spec="^1.2.0" />
+    <engine name="android" spec="^4.0.1" />
+    <preference name="android-minSdkVersion" value="14" />
+</widget>

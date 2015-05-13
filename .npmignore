@@ -1,0 +1,5 @@
+/example-app
+/background-activity-lib/build/
+/background-activity-lib/build.gradle
+*.iml
+.npmignore
