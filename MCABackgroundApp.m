@@ -52,7 +52,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
 @implementation CDVViewController (MCABackgroundApp)
 
 - (void)background_onAppWillEnterForeground:(NSNotification*)notification {
-    MCABackgroundApp* plugin = [self getCommandInstance:@"BackgroundApp"];
+    MCABackgroundApp* plugin = [self getCommandInstance:@"backgroundplugin"];
     [plugin sendResult:@{
                          @"type": @"foreground",
                          @"value": plugin->_hasEverLaunched ? @"normal" : @"normal-launch"
