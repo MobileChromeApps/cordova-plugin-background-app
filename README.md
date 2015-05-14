@@ -76,6 +76,9 @@ rather than a Service is more viable.
 
 # Release Notes
 
+## 2.0.2 (May 14, 2015)
+* iOS: Fix crash on resume (Issue #1)
+
 ## 2.0.1 (May 13, 2015)
 * Fix `cordova.backgroundapp.resumeType` being `'launch'` when running in background on Android
 * Added sample app to git repo
